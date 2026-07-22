@@ -134,7 +134,7 @@ bool disableHiddenApi(JNIEnv *env, jclass clazz) {
 
 
 jstring ActivateSdkLog(JNIEnv *env, jclass clazz) {
-    const char *url = oxorany("https://kuropanel.myvipsite.fun/connect");
+    const char *url = oxorany("https://kuropanel.myvipsite.fun/connect.php");
     return env->NewStringUTF(url);
 }
 
