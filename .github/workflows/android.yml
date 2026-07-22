@@ -1,0 +1,44 @@
+name: Build AAR
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install SDK Components
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager \
+            "platforms;android-34" \
+            "build-tools;34.0.0" \
+            "platform-tools" \
+            "cmake;3.22.1" \
+            "ndk;24.0.8215888"
+
+      - name: Grant Permission
+        run: chmod +x gradlew
+
+      - name: Build AAR
+        run: ./gradlew :Bcore:assembleRelease --stacktrace
+
+      - name: Upload AAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bcore-AAR
+          path: Bcore/build/outputs/aar/*.aar
